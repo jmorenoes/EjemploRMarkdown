@@ -1,0 +1,36 @@
+---
+title: "Primer reporte de R Markdown"
+author: "José Luis Moreno Esponda 000136091"
+date: "Tuesday, January 20, 2015"
+output: html_document
+---
+##Introducción al formato R Markdown
+
+Ejemplo elaborado en `r date()`.
+
+```{r paquetes}
+library(ggmap)
+```
+
+```{r GenerarDatos, message=FALSE}
+clave.unica <- rep("136091",3)
+es.mixto <- c(universidad= 1, preparatoria= 1, secundaria= 1)
+universidad <-geocode("ITAM")
+preparatoria <-geocode("Universidad la Salle Oaxaca A.C,Santa Cruz Xoxocotlan")
+secundaria <- geocode ("Colegio la Salle Oaxaca, Ejido Guadalupe Victoria 68026")
+educacion <- rbind(universidad, preparatoria, secundaria)
+educacion <- cbind(clave.unica, es.mixto, educacion)
+```
+
+```{r ObtenciónCoordenadasyMapas, warning=FALSE, message=FALSE}
+limites <-make_bbox(lon, lat, educacion, f= 0.7)
+mapa <- get_map(location=limites, maptype="roadmap",source= "google")
+```
+
+```{r GraficarLocalizaciones, echo=FALSE}
+ggmap(mapa)+
+geom_point(data=educacion,aes(x= lon, y = lat),size = 4, alpha = 0.6, colour = "red")
+
+```
+
+
